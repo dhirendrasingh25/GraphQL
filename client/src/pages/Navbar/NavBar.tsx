@@ -25,7 +25,7 @@ function classNames(...classes: (string | boolean)[]) {
 
 const NavBar: React.FC = () => {
   return (
-    <Disclosure as="nav" className="bg-[#f8f8f8] h-full w-full ">
+    <Disclosure as="nav" className="bg-[#f8f8f8] h-full w-full sticky top-0 ">
       {({ open }: { open: boolean }) => (
         <>
           <div className="w-full h-full px-6 py-3 ">

@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { graphqlHTTP } from "express-graphql";
 import schema from "./Schema/schema.js";
 import { connectDB } from "./utils/features.js";
+import cors from "cors";
 
 // App Configs
 const app = express();
@@ -18,6 +19,8 @@ const mongoURI = process.env.MONGO_URI;
 // Databse
 connectDB(mongoURI);
 // Using Middlewares Here
+app.use(cors());
+app.use(express.json());
 app.use(
   "/graphql",
   graphqlHTTP({

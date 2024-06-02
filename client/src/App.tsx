@@ -2,7 +2,7 @@ import {
 BrowserRouter as Router ,Routes , Route
 } from "react-router-dom";
 import { lazy, Suspense } from "react";
-import Loader from "./components/Loader";
+import { Loader } from "./components/Loader";
 import NavBar from "./pages/Navbar/NavBar";
 // import Project from "./pages/Project";
 
@@ -14,7 +14,7 @@ const App = () => {
     <>
     <Router>
       {/* Header */}
-      <NavBar/>
+      <NavBar />
       <Suspense fallback={<Loader/>}>    
         <Routes>
           <Route path='/' element={<Home />} ></Route>
