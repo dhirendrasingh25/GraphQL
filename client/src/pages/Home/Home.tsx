@@ -1,5 +1,5 @@
 import { Loader } from '@/components/Loader';
-import { useQuery, gql } from '@apollo/client';
+import { useQuery ,useMutation, gql, InMemoryCache } from '@apollo/client';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -12,16 +12,14 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, ChevronDown } from "lucide-react"
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
@@ -35,54 +33,17 @@ import {
 } from "@/components/ui/table"
 import React from 'react';
 import {Client }from '../../../Types/client'
+import{ GET_CLIENTS} from '../../../Queries/ClientQueries'
+import {DELETE_CLIENT} from '../../../Mutations/ClientMutations'
 
-const GET_CLIENTS = gql`
-  query {clients{
-    name,
-    email,
-    phone,
-    id
-  }}
-`;
-// const Home: React.FC = () => {
-//   const { loading, error, data } = useQuery(GET_CLIENTS);
-//   if (loading) return <Loader />;
-//   if (error) return (
-//     <div className='p-4 text-sm overflow-x-scroll'>
-//       <p>Something Went Wrong ..</p>
-//       <pre>{JSON.stringify(error, null, 2)}</pre>
-//     </div>
-//   );
-  
-//   return (
-//     <>
-//       <div className='w-full h-full'>
-//         <ul>
-//           {data.clients.map((client: { id: string; name: string; email: string; phone: string }) => (
-//             <li key={client.id}>
-//               <p>Name: {client.name}</p>
-//               <p>Email: {client.email}</p>
-//               <p>Phone: {client.phone}</p>
-//             </li>
-//           ))}
-//         </ul>
-//       </div>
-//     </>
-//   );
-// }
-
- 
 export const Home: React.FC =()=> {
   const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
   const { loading, error, data } = useQuery<{ clients: Client[] }>(GET_CLIENTS);
-
- 
+  const [deleteClient] = useMutation(DELETE_CLIENT);
+  
   const columns: ColumnDef<Client>[] = [
     {
       id: "id",
@@ -154,30 +115,37 @@ export const Home: React.FC =()=> {
     {
       id: "actions",
       header: () => <div className="text-center">Actions</div>,
-      cell: ({ row }) => {
-        const payment = row.original
-   
+      cell: (row) => {
+
+        const clientId = row.row.original.id; 
+        // console.log(clientId);
+        const handleDeleteClick = () => {
+          deleteClient({
+            variables: { id: clientId },
+            // refetchQueries: [{ query: GET_CLIENTS }],
+            update(cache, { data: { deleteClient} }) {
+              const {clients }= cache.readQuery({query:GET_CLIENTS})
+              cache.writeQuery({
+                query:GET_CLIENTS,
+                data:{clients:clients.filter( client =>client.id !== deleteClient.id)}
+              })
+            }
+          })
+          .then(response => {
+            // Handle successful response
+            console.log('Client deleted:', response);
+          })
+          .catch(error => {
+            // Handle error
+            console.error('Error deleting client:', error);
+          });
+        };
+
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(row.original.id)}
-              >
-                Copy client ID
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>View client</DropdownMenuItem>
-              <DropdownMenuItem>View client details</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )
+          <button type='button' className='' onClick={handleDeleteClick}>
+          <DeleteIcon />
+          </button>
+        );
       },
     },
   ]
@@ -207,7 +175,7 @@ export const Home: React.FC =()=> {
       <pre>{JSON.stringify(error, null, 2)}</pre>
     </div>
   );
-  console.log(data);
+  // console.log(data);
   return (
     <div className="w-full px-6">
       <div className="flex items-center py-4 justify-center w-full">

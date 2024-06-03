@@ -5,11 +5,30 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import React from 'react';
 
 
+const cache = new InMemoryCache({
+  typePolicies:{
+    Query:{
+      fields:{
+        clients:{
+          merge(existing,incoming){
+            return incoming
+          }
+        },
+        projects:{
+          merge(existing,incoming){
+            return incoming
+          }
+        }
+      }
+    }
+  }
+})
+
 const server = import.meta.env.VITE_SERVER_URI
 console.log(server);
 const client = new ApolloClient({
   uri: server,
-  cache: new InMemoryCache(),
+  cache
 });
 
 
