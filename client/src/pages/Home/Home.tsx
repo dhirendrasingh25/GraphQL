@@ -35,6 +35,7 @@ import React from 'react';
 import {Client }from '../../../Types/client'
 import{ GET_CLIENTS} from '../../../Queries/ClientQueries'
 import {DELETE_CLIENT} from '../../../Mutations/ClientMutations'
+import AddClient from './AddClient';
 
 export const Home: React.FC =()=> {
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -178,7 +179,7 @@ export const Home: React.FC =()=> {
   // console.log(data);
   return (
     <div className="w-full px-6">
-      <div className="flex items-center py-4 justify-center w-full">
+      <div className="flex items-center py-4  justify-center w-full">
         <Input
           placeholder="Filter emails..."
           value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
@@ -187,6 +188,9 @@ export const Home: React.FC =()=> {
           }
           className="max-w-sm"
         />
+        <div className='px-2'>
+          <AddClient/>
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
