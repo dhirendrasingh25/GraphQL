@@ -10,8 +10,8 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown } from "lucide-react"
-import { useQuery  } from '@apollo/client';
+import { ChevronDown } from "lucide-react"
+import { useMutation, useQuery  } from '@apollo/client';
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -38,6 +38,7 @@ import React from "react"
 import {GET_PROJECTS} from '../../../Queries/ProjectQueries'
 import { Loader } from "@/components/Loader";
 import AddProject from "./AddProject";
+import { DELETE_PROJECTS } from "../../../Mutations/ProjectMutations";
 const Products = () => {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -47,7 +48,8 @@ const Products = () => {
     React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
     const { loading, error, data } = useQuery<{ projects: Project[] }>(GET_PROJECTS);
-  
+    const [deleteProject] = useMutation(DELETE_PROJECTS)
+
     const columns: ColumnDef<Project>[] = [
         {
           id: "id",
@@ -109,21 +111,21 @@ const Products = () => {
           accessorKey: "client.name",
           header: () => <div className="text-center">Client Name</div>,
           cell: ({ row }) => 
-           <div className="text-center font-medium">{row.getValue("client.name")|| "N/A"}</div>
+           <div className="text-center font-medium">{row.original.client?.name || "N/A"}</div>
           ,
         },
         {
           accessorKey: "client.email",
-          header: () => <div className="text-center">Cleint Email</div>,
+          header: () => <div className="text-center">Client Email</div>,
           cell: ({ row }) => 
-           <div className="text-center font-medium">{row.getValue("cleint.email")|| "N/A"}</div>
+           <div className="text-center font-medium">{row.original.client?.email || "N/A"}</div>
           ,
         },
         {
           accessorKey: "client.phone",
-          header: () => <div className="text-center">Cleint Phone</div>,
+          header: () => <div className="text-center">Client Phone</div>,
           cell: ({ row }) => 
-           <div className="text-center font-medium">{row.getValue("cleint.phone")|| "N/A"}</div>
+           <div className="text-center font-medium">{row.original.client?.phone || "N/A"}</div>
           ,
         },
         {
@@ -131,10 +133,21 @@ const Products = () => {
           header: () => <div className="text-center">Actions</div>,
           cell: (row) => {
     
-            // const clientId = row.row.original.id; 
-            // console.log(clientId);
+            const projectId = row.row.original?.id; 
+            console.log(projectId);
             const handleDeleteClick = () => {
-              console.log("Hello");
+              deleteProject({
+                variables:{
+                  id:projectId
+                },
+                update(cache,{data:{deleteProject}}){
+                  const {projects} = cache.readQuery({query:GET_PROJECTS})
+                  cache.writeQuery({
+                    query:GET_PROJECTS,
+                    data:{projects:projects.filter(project=>project.id !== deleteProject.id )}
+                  })
+                }
+              })
             };
     
             return (
@@ -145,7 +158,7 @@ const Products = () => {
           },
         },
       ]
-    console.log(data?.projects);
+    // console.log(data?.projects);
     const table = useReactTable({
         data:data?.projects || [],
         columns,
