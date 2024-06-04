@@ -62,9 +62,9 @@ Welcome to the Project Management Portal, a web application where users can perf
 
 
 ##### Contribution
-Fork the repository
-Create a new branch for your changes
-Make your changes and commit them
-Push your changes to your fork 5. Create a pull request
+1. Fork the repository
+2. Create a new branch for your changes
+3. Make your changes and commit them
+4. Push your changes to your fork 5. Create a pull request
 
 
