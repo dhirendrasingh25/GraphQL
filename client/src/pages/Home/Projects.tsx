@@ -39,6 +39,7 @@ import {GET_PROJECTS} from '../../../Queries/ProjectQueries'
 import { Loader } from "@/components/Loader";
 import AddProject from "./AddProject";
 import { DELETE_PROJECTS } from "../../../Mutations/ProjectMutations";
+import UpdateProject from "./UpdateProject";
 const Products = () => {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -134,7 +135,7 @@ const Products = () => {
           cell: (row) => {
     
             const projectId = row.row.original?.id; 
-            console.log(projectId);
+            // console.log(projectId);
             const handleDeleteClick = () => {
               deleteProject({
                 variables:{
@@ -151,9 +152,14 @@ const Products = () => {
             };
     
             return (
-              <button type='button' className='' onClick={handleDeleteClick}>
-              <DeleteIcon />
+              <div className="sm:space-x-2 ">
+              <button type='button'>
+                <UpdateProject projectID={projectId}/>
               </button>
+              <button type='button' className='' onClick={handleDeleteClick}>
+                <DeleteIcon />
+              </button>
+              </div>
             );
           },
         },

@@ -98,7 +98,7 @@ const NavBar: React.FC = () => {
                       />
                     </Menu.Button>
                   </div>
-                  <Transition
+                  {/* <Transition
                     enter="transition ease-out duration-100"
                     enterFrom="transform opacity-0 scale-95"
                     enterTo="transform opacity-100 scale-100"
@@ -138,7 +138,7 @@ const NavBar: React.FC = () => {
                         )}
                       </Menu.Item>
                     </Menu.Items>
-                  </Transition>
+                  </Transition> */}
                 </Menu>
               </div>
             </div>

@@ -25,7 +25,7 @@ const cache = new InMemoryCache({
 })
 
 const server = import.meta.env.VITE_SERVER_URI
-console.log(server);
+// console.log(server);
 const client = new ApolloClient({
   uri: server,
   cache

@@ -16,3 +16,14 @@ export const GET_PROJECTS = gql`
         }   
     }
 `;
+
+export const GET_PROJECT_BY_ID =gql`
+    query($id: ID!){
+        project(id:$id){
+            id
+            name
+            status
+            description
+        }
+    }
+`
