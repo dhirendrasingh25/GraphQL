@@ -4,9 +4,10 @@ BrowserRouter as Router ,Routes , Route
 import { lazy, Suspense } from "react";
 import { Loader } from "./components/Loader";
 import NavBar from "./pages/Navbar/NavBar";
-// import Project from "./pages/Project";
 
-const Home = lazy(()=> import("./pages/Home/Home"));
+
+const Clients= lazy(()=> import("./pages/Home/Clients"));
+const Projects= lazy(()=> import("./pages/Home/Projects"))
 
 
 const App = () => {
@@ -17,7 +18,8 @@ const App = () => {
       <NavBar />
       <Suspense fallback={<Loader/>}>    
         <Routes>
-          <Route path='/' element={<Home />} ></Route>
+          <Route path='/' element={<Clients />} ></Route>
+          <Route path='/projects' element={<Projects />} ></Route>
         </Routes>
       </Suspense>
     </Router>

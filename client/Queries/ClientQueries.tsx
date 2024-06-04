@@ -8,3 +8,11 @@ export const GET_CLIENTS = gql`
     id
   }}
 `;
+
+export const GET_CLIENTS_ID = gql`
+  query {clients{
+    id
+    name
+  }}
+`;
+

@@ -1,5 +1,5 @@
 import { Loader } from '@/components/Loader';
-import { useQuery ,useMutation, gql, InMemoryCache } from '@apollo/client';
+import { useQuery ,useMutation } from '@apollo/client';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -37,7 +37,7 @@ import{ GET_CLIENTS} from '../../../Queries/ClientQueries'
 import {DELETE_CLIENT} from '../../../Mutations/ClientMutations'
 import AddClient from './AddClient';
 
-export const Home: React.FC =()=> {
+export const Clients: React.FC =()=> {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
@@ -298,5 +298,5 @@ export const Home: React.FC =()=> {
 
 
 
-export default Home;
+export default Clients;
 

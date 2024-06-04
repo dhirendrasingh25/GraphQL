@@ -1,13 +1,13 @@
 export interface  Client  {
-    id: string;
+    id: string |null;
     name: string | null;
-    email: string;
-    phone: string;
+    email: string |null;
+    phone: string |null;
   };
   
-  export interface  ClientsResponse  {
+export interface  ClientsResponse  {
     data: {
       clients: Client[];
     };
-  };
+};
   

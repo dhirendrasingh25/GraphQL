@@ -6,6 +6,7 @@ import {
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import passportwithbg from '../../assets/passportwithbg.jpg'
 import GraphQL_logo from '../../assets/GraphQL_Logo.svg'
+import { useEffect, useState } from 'react';
 interface NavigationItem {
   name: string;
   href: string;
@@ -13,8 +14,8 @@ interface NavigationItem {
 }
 
 const navigation: NavigationItem[] = [
-  { name: 'Home', href: '/', current: true },
-  // { name: 'Team', href: '#', current: false },
+  { name: 'Clients', href: '/', current: false },
+  { name: 'Projects', href: '/projects', current: false },
   // { name: 'Projects', href: '#', current: false },
   // { name: 'Calendar', href: '#', current: false },
 ];
@@ -24,6 +25,16 @@ function classNames(...classes: (string | boolean)[]) {
 }
 
 const NavBar: React.FC = () => {
+  const [navItems, setNavItems] = useState(navigation)
+  useEffect(() => {
+    const currentPath = window.location.pathname;
+    const updatedNavItems = navigation.map(item => ({
+      ...item,
+      current: item.href === currentPath,
+    }));
+    setNavItems(updatedNavItems);
+  }, []);
+
   return (
     <Disclosure as="nav" className="bg-[#f8f8f8] h-full w-full sticky top-0 ">
       {({ open }: { open: boolean }) => (
@@ -49,7 +60,7 @@ const NavBar: React.FC = () => {
               </div>
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
-                    {navigation.map((item) => (
+                    {navItems.map((item) => (
                       <a
                         key={item.name}
                         href={item.href}
