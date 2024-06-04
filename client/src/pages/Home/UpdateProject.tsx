@@ -79,9 +79,9 @@ const UpdateProject: React.FC<UpdateProjectProps> =({ projectID }) => {
     if (loading) return  <Loader/>
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
+        // console.log(values)
         const theStatus = values.status === "Completed" ? "completed" :values.status === "In Progress"  ? "progress" : "new";
-        console.log(theStatus);
+        // console.log(theStatus);
         updateProject(({
           variables:{
             id:projectID,
